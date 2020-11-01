@@ -11,6 +11,7 @@ import {Menu} from "antd";
 import {Home} from "./pages/Home";
 import {Login} from "./pages/Login";
 import {SubManage} from "./pages/SubManage";
+import {SubCompare} from "./pages/SubCompare";
 
 const pages = [
     {
@@ -31,7 +32,7 @@ const pages = [
     {
         path: "/subscribe/compare",
         name: "比较订阅",
-        component: <div>compare subscribe</div>,
+        component: <SubCompare/>,
     },
     {
         path: "/subscribe/add",
