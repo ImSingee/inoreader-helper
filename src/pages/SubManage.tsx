@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {SubStatus} from "../components/SubStatus";
-import {refreshAndGetSubscriptionInfo, UserSubscriptionInfo, Folder} from "../utils/subscription";
+import {refreshAndGetSubscriptionInfo, UserSubscriptionInfo} from "../utils/subscription";
 import {Col, Row, Spin, Tree} from "antd";
 import {SubscriptionCard} from "../components/Subscription";
 import {InfoContext} from "../context/info";
@@ -8,7 +8,7 @@ import {InfoContext} from "../context/info";
 export function SubManage() {
     const [spinning, setSpinning] = useState(true);
     const [subInfo, setSubInfo] = useState<UserSubscriptionInfo | null>(null);
-    const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
+    const [selectedFolderID, setSelectedFolderID] = useState<string | null>(null);
 
     useEffect(() => {
         refreshAndGetSubscriptionInfo(setSubInfo).then(() => {
@@ -16,25 +16,9 @@ export function SubManage() {
         });
     }, []);
 
-    if (subInfo) {
-        if (selectedFolder) {
-            const newFolder = subInfo.folders[selectedFolder.id];
-
-            if (!newFolder) {
-                // 新的文件夹在更新后已经不存在了，取消 folder 的选中
-                setSelectedFolder(null);
-            }
-
-            if (!Object.is(selectedFolder, newFolder)) {
-                // 新的文件夹与旧的文件夹有差异，更新
-                setSelectedFolder(newFolder);
-            }
-        }
-    }
-
     const onSelect = ([selectedKey]: React.Key[]) => {
         console.log("select", selectedKey);
-        setSelectedFolder(subInfo?.folders[selectedKey] || null);
+        setSelectedFolderID(selectedKey as string || null);
     };
 
     console.log("SubManage Refreshed");
@@ -43,14 +27,16 @@ export function SubManage() {
         <InfoContext.Provider value={{info: subInfo, setInfo: setSubInfo}}>
             <SubStatus spinning={spinning} setSpinning={setSpinning}/>
 
-            <Spin spinning={spinning}>
+            {subInfo && <Spin spinning={spinning}>
                 <Row style={{marginTop: "3rem"}}>
                     <Col span={4}>
                         <Tree treeData={
-                            subInfo ? Object.values(subInfo.folders).map(folder => ({
+                            [{
+                                title: `ROOT ${Object.values(subInfo.noFolderSubscriptions).length}`, key: "/",
+                            }].concat(Object.values(subInfo.folders).map(folder => ({
                                 title: `${folder.title} (${folder.subscriptions.length})`,
                                 key: folder.id,
-                            })) : []}
+                            })))}
                               defaultSelectedKeys={subInfo ? [Object.values(subInfo.folders)[0].id] : []}
                               onSelect={onSelect}>
                         </Tree>
@@ -58,8 +44,9 @@ export function SubManage() {
                     <Col span={20}>
                         <Row>
                             {
-                                (selectedFolder ? selectedFolder.subscriptions : subInfo ? Object.values(subInfo.subscriptions) : undefined)?.map(sub =>
-                                    <Col span={8}>
+                                (selectedFolderID ? selectedFolderID === "/" ? Object.values(subInfo.noFolderSubscriptions) :
+                                    subInfo.folders[selectedFolderID].subscriptions : Object.values(subInfo.subscriptions)).map(sub =>
+                                    <Col span={8} key={sub.id}>
                                         <div style={{margin: "0.3rem"}}><SubscriptionCard key={sub.id} sub={sub}/></div>
                                     </Col>)
                             }
@@ -67,7 +54,7 @@ export function SubManage() {
                     </Col>
                 </Row>
 
-            </Spin>
+            </Spin>}
         </InfoContext.Provider>
 
     );

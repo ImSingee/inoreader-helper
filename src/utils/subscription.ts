@@ -21,6 +21,7 @@ export interface Folder {
 export interface UserSubscriptionInfo {
     subscriptions: { [id: string]: Subscription }
     folders: { [id: string]: Folder }
+    noFolderSubscriptions: { [id: string]: Subscription }
     updateAt: string,
     version: 1
 }
@@ -39,6 +40,7 @@ async function getNewestSubscriptionInfo(): Promise<UserSubscriptionInfo> {
     const result: UserSubscriptionInfo = {
         subscriptions: {},
         folders: {},
+        noFolderSubscriptions: {},
         updateAt: (new Date()).toISOString(),
         version: 1,
     };
@@ -47,6 +49,12 @@ async function getNewestSubscriptionInfo(): Promise<UserSubscriptionInfo> {
 
     subscriptionsR?.data.subscriptions.forEach((sub: any) => {
         result.subscriptions[sub.id] = sub;
+    });
+
+    Object.values(result.subscriptions).forEach(sub => {
+        if (!sub.categories || sub.categories.length === 0) {
+            result.noFolderSubscriptions[sub.id] = sub;
+        }
     });
 
     const foldersR = await get("/tag/list", {"types": 1});
