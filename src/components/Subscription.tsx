@@ -1,10 +1,12 @@
 import {Button, Card, Modal, Popconfirm} from "antd";
-import React, {useState} from "react";
-import {Subscription, UserSubscriptionInfo} from "../utils/subscription";
+import React, {useContext, useState} from "react";
+import {Subscription} from "../utils/subscription";
 import {EditOutlined} from "@ant-design/icons";
+import {InfoContext} from "../context/info";
 
-export function SubscriptionCard({sub, info}: { sub: Subscription, info: UserSubscriptionInfo }) {
+export function SubscriptionCard({sub}: { sub: Subscription }) {
     const [modalVisible, setModalVisible] = useState(false);
+    const {info, setInfo} = useContext(InfoContext);
 
     const deleteFromFolder = function (folderId: string) {
         // 确实删除
@@ -29,7 +31,7 @@ export function SubscriptionCard({sub, info}: { sub: Subscription, info: UserSub
                 <ul>
                     {
                         sub.categories.map(c => (
-                            <li>{info.folders[c.id].title}
+                            <li>{info!.folders[c.id].title}
                                 <Popconfirm title="是否确认从文件夹中删除该订阅？" onConfirm={() => {
                                     deleteFromFolder(c.id);
                                 }}>

@@ -1,16 +1,19 @@
 import React, {useEffect, useState} from "react";
 import {SubStatus} from "../components/SubStatus";
-import {getUserSubscriptionInfo, UserSubscriptionInfo, Folder} from "../utils/subscription";
+import {refreshAndGetSubscriptionInfo, UserSubscriptionInfo, Folder} from "../utils/subscription";
 import {Col, Row, Spin, Tree} from "antd";
 import {SubscriptionCard} from "../components/Subscription";
+import {InfoContext} from "../context/info";
 
 export function SubManage() {
-    const [spinning, setSpinning] = useState(false);
+    const [spinning, setSpinning] = useState(true);
     const [subInfo, setSubInfo] = useState<UserSubscriptionInfo | null>(null);
     const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
 
     useEffect(() => {
-        getUserSubscriptionInfo().then(setSubInfo);
+        refreshAndGetSubscriptionInfo(setSubInfo).then(() => {
+            setSpinning(false);
+        });
     }, []);
 
     const onSelect = ([selectedKey]: React.Key[]) => {
@@ -19,8 +22,8 @@ export function SubManage() {
     };
 
     return (
-        <>
-            <SubStatus spinning={spinning} setSpinning={setSpinning} subInfo={subInfo} setSubInfo={setSubInfo}/>
+        <InfoContext.Provider value={{info: subInfo, setInfo: setSubInfo}}>
+            <SubStatus spinning={spinning} setSpinning={setSpinning}/>
 
             <Spin spinning={spinning}>
                 <Row style={{marginTop: "3rem"}}>
@@ -38,8 +41,7 @@ export function SubManage() {
                         <Row>
                             {
                                 selectedFolder?.subscriptions.map(sub => <Col span={8}>
-                                    <div style={{margin: "0.3rem"}}><SubscriptionCard key={sub.id} sub={sub}
-                                                                                      info={subInfo!}/></div>
+                                    <div style={{margin: "0.3rem"}}><SubscriptionCard key={sub.id} sub={sub}/></div>
                                 </Col>)
                             }
                         </Row>
@@ -47,7 +49,7 @@ export function SubManage() {
                 </Row>
 
             </Spin>
-        </>
+        </InfoContext.Provider>
 
     );
 }

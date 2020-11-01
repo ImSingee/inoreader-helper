@@ -1,4 +1,3 @@
-import store from "../store";
 import {get} from "./request";
 
 export interface Subscription {
@@ -26,17 +25,17 @@ export interface UserSubscriptionInfo {
     version: 1
 }
 
-export async function getUserSubscriptionInfo(): Promise<UserSubscriptionInfo | null> {
-    const info = await store.get("subscription-info");
-    if (!info) return null;
-    return JSON.parse(info);
-}
+// export async function getUserSubscriptionInfo(): Promise<UserSubscriptionInfo | null> {
+//     const info = await store.get("subscription-info");
+//     if (!info) return null;
+//     return JSON.parse(info);
+// }
+//
+// export async function storeUserSubscriptionInfo(info: UserSubscriptionInfo) {
+//     await store.set("subscription-info", JSON.stringify(info));
+// }
 
-export async function storeUserSubscriptionInfo(info: UserSubscriptionInfo) {
-    await store.set("subscription-info", JSON.stringify(info));
-}
-
-export async function getNewestSubscriptionInfo(): Promise<UserSubscriptionInfo> {
+async function getNewestSubscriptionInfo(): Promise<UserSubscriptionInfo> {
     const result: UserSubscriptionInfo = {
         subscriptions: {},
         folders: {},
@@ -72,4 +71,8 @@ export async function getNewestSubscriptionInfo(): Promise<UserSubscriptionInfo>
     });
 
     return result;
+}
+
+export async function refreshAndGetSubscriptionInfo(setInfo: (newInfo: UserSubscriptionInfo) => void) {
+    setInfo(await getNewestSubscriptionInfo());
 }
