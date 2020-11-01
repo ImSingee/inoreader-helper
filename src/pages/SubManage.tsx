@@ -58,9 +58,10 @@ export function SubManage() {
                     <Col span={20}>
                         <Row>
                             {
-                                selectedFolder?.subscriptions.map(sub => <Col span={8}>
-                                    <div style={{margin: "0.3rem"}}><SubscriptionCard key={sub.id} sub={sub}/></div>
-                                </Col>)
+                                (selectedFolder ? selectedFolder.subscriptions : subInfo ? Object.values(subInfo.subscriptions) : undefined)?.map(sub =>
+                                    <Col span={8}>
+                                        <div style={{margin: "0.3rem"}}><SubscriptionCard key={sub.id} sub={sub}/></div>
+                                    </Col>)
                             }
                         </Row>
                     </Col>
