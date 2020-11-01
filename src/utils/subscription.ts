@@ -94,6 +94,10 @@ export async function deleteSubscriptionFromFolder(subscriptionId: string, folde
     return await editSubscription("edit", subscriptionId, {removeFromFolder: folderId});
 }
 
+export async function addSubscriptionToFolder(subscriptionId: string, folderId: string) {
+    return await editSubscription("edit", subscriptionId, {addToFolder: folderId});
+}
+
 export async function refreshAndGetSubscriptionInfo(setInfo: (newInfo: UserSubscriptionInfo) => void) {
     const info = await getNewestSubscriptionInfo();
 
