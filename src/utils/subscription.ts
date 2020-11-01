@@ -1,4 +1,4 @@
-import {get} from "./request";
+import {get, post} from "./request";
 
 export interface Subscription {
     id: string,
@@ -73,6 +73,29 @@ async function getNewestSubscriptionInfo(): Promise<UserSubscriptionInfo> {
     return result;
 }
 
+async function editSubscription(action: "edit" | "subscribe" | "unsubscribe", subscriptionId: string,
+                                {newTitle, addToFolder, removeFromFolder}: {
+                                    newTitle?: string,
+                                    addToFolder?: string,
+                                    removeFromFolder?: string
+                                }) {
+    const response = await post("/subscription/edit", {
+        "ac": action,
+        "s": subscriptionId,
+        "t": newTitle,
+        "a": addToFolder,
+        "r": removeFromFolder,
+    });
+
+    return !!response;
+}
+
+export async function deleteSubscriptionFromFolder(subscriptionId: string, folderId: string) {
+    return await editSubscription("edit", subscriptionId, {removeFromFolder: folderId});
+}
+
 export async function refreshAndGetSubscriptionInfo(setInfo: (newInfo: UserSubscriptionInfo) => void) {
-    setInfo(await getNewestSubscriptionInfo());
+    const info = await getNewestSubscriptionInfo();
+
+    setInfo(info);
 }

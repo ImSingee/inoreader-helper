@@ -29,6 +29,11 @@ const pages = [
         component: <SubManage/>,
     },
     {
+        path: "/subscribe/compare",
+        name: "比较订阅",
+        component: <div>compare subscribe</div>,
+    },
+    {
         path: "/subscribe/add",
         name: "添加订阅",
         component: <div>add subscribe</div>,

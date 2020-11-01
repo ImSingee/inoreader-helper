@@ -16,10 +16,28 @@ export function SubManage() {
         });
     }, []);
 
+    if (subInfo) {
+        if (selectedFolder) {
+            const newFolder = subInfo.folders[selectedFolder.id];
+
+            if (!newFolder) {
+                // 新的文件夹在更新后已经不存在了，取消 folder 的选中
+                setSelectedFolder(null);
+            }
+
+            if (!Object.is(selectedFolder, newFolder)) {
+                // 新的文件夹与旧的文件夹有差异，更新
+                setSelectedFolder(newFolder);
+            }
+        }
+    }
+
     const onSelect = ([selectedKey]: React.Key[]) => {
         console.log("select", selectedKey);
         setSelectedFolder(subInfo?.folders[selectedKey] || null);
     };
+
+    console.log("SubManage Refreshed");
 
     return (
         <InfoContext.Provider value={{info: subInfo, setInfo: setSubInfo}}>
