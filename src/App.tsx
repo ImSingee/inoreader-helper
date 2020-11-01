@@ -10,6 +10,7 @@ import "./App.css";
 import {Menu} from "antd";
 import {Home} from "./pages/Home";
 import {Login} from "./pages/Login";
+import {SubManage} from "./pages/SubManage";
 
 const pages = [
     {
@@ -21,6 +22,11 @@ const pages = [
         path: "/login",
         name: "登录",
         component: <Login/>,
+    },
+    {
+        path: "/subscribe/manage",
+        name: "管理订阅",
+        component: <SubManage/>,
     },
     {
         path: "/subscribe/add",
