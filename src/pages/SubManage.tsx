@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {SubStatus} from "../components/SubStatus";
 import {getUserSubscriptionInfo, UserSubscriptionInfo, Folder} from "../utils/subscription";
-import {Card, Col, Row, Spin, Tree} from "antd";
+import {Col, Row, Spin, Tree} from "antd";
+import {SubscriptionCard} from "../components/Subscription";
 
 export function SubManage() {
     const [spinning, setSpinning] = useState(false);
@@ -37,11 +38,8 @@ export function SubManage() {
                         <Row>
                             {
                                 selectedFolder?.subscriptions.map(sub => <Col span={8}>
-                                    <Card key={sub.id} title={sub.title}
-                                          style={{margin: "0.3rem", wordBreak: "break-all"}}>
-                                        <div>主页：<a href={sub.htmlUrl}>{sub.htmlUrl}</a></div>
-                                        <div>RSS：<a href={sub.url}>{sub.url}</a></div>
-                                    </Card>
+                                    <div style={{margin: "0.3rem"}}><SubscriptionCard key={sub.id} sub={sub}
+                                                                                      info={subInfo!}/></div>
                                 </Col>)
                             }
                         </Row>
