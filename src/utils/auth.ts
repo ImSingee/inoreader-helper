@@ -1,6 +1,7 @@
 import store from "../store";
 import axios from "axios";
 import qs from "qs";
+import {host} from "./const";
 
 export class Credential {
     private username: string;
@@ -34,7 +35,7 @@ export class Credential {
         let result;
 
         try {
-            result = await axios.post("https://www.inoreader.com/accounts/ClientLogin", qs.stringify({
+            result = await axios.post(host + "/accounts/ClientLogin", qs.stringify({
                 "Email": this.username,
                 "Passwd": this.password,
             }), {

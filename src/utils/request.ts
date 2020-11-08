@@ -2,10 +2,11 @@ import {getAuthHeaders} from "./auth";
 import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 import {message} from "antd";
 import qs from "qs";
+import {host} from "./const";
 
 export async function request(endpoint: string, method: "GET" | "POST", params: object): Promise<AxiosResponse | null> {
     const authHeaders = await getAuthHeaders();
-    const url = "https://www.inoreader.com/reader/api/0" + endpoint;
+    const url = host + "/reader/api/0" + endpoint;
 
     const config: AxiosRequestConfig = {
         headers: Object.assign({
