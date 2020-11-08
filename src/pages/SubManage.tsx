@@ -17,11 +17,8 @@ export function SubManage() {
     }, []);
 
     const onSelect = ([selectedKey]: React.Key[]) => {
-        console.log("select", selectedKey);
         setSelectedFolderID(selectedKey as string || null);
     };
-
-    console.log("SubManage Refreshed");
 
     return (
         <InfoContext.Provider value={{info: subInfo, setInfo: setSubInfo}}>

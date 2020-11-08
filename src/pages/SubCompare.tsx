@@ -20,7 +20,6 @@ export function SubCompare() {
     }, []);
 
     const onSelect = (index: 0 | 1, selectedKey: string) => {
-        console.log("select", index, selectedKey);
         if (index === 0) {
             setCompareFolders([selectedKey, compareFolders[1]]);
         } else {
