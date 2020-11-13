@@ -34,7 +34,6 @@ export function SubManage() {
                                 title: `${folder.title} (${folder.subscriptions.length})`,
                                 key: folder.id,
                             })))}
-                              defaultSelectedKeys={subInfo ? [Object.values(subInfo.folders)[0].id] : []}
                               onSelect={onSelect}>
                         </Tree>
                     </Col>
